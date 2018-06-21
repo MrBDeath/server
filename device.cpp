@@ -3,12 +3,16 @@
 //
 
 #include "device.h"
-
 // -------------------------------------
 
 CDevice::CDevice() : currentState(STATE_SENDING)
 {
 
+}
+
+CDevice::CDevice(const char* path) : currentState(STATE_SENDING)
+{
+    protocol.init(path);
 }
 
 CDevice::~CDevice()
@@ -253,3 +257,40 @@ std::string CDevice::Reset()
         json["STATUS"] = "fail";
     return json.dump(4);
 }
+
+void CDevice::Run()
+{
+    std::string json = "Error";
+    stRes.Name = "Bad Request";
+    stRes.Type = 400;
+    if(command.size() > 1)
+    {
+        if(command[1] == "status")
+        {
+            json = GetStatus();
+            stRes.Name = "OK";
+            stRes.Type = 200;
+        }
+        if(command[1] == "learn")
+        {
+            json = Learn();
+            stRes.Name = "OK";
+            stRes.Type = 200;
+        }
+        if(command[1] == "reset")
+        {
+            json = Reset();
+            stRes.Name = "OK";
+            stRes.Type = 200;
+        }
+        if(command[1] == "dispense")
+            if(command.size() > 2 && !command[2].empty())
+            {
+                json = Dispense((uint8_t) strtol(command[2].c_str(), nullptr, 10));
+                stRes.Name = "OK";
+                stRes.Type = 200;
+            }
+    }
+    response = json;
+}
+

@@ -12,7 +12,7 @@ void clean_up(int)
 #define IS_EAGAIN() ((errno) == EAGAIN || (errno) == EWOULDBLOCK)
 #endif
 
-bool Server::Start(const Config& cfg)
+bool Server::Start(Config& cfg)
 {
 
     int fd_socket = socket(PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
@@ -21,8 +21,7 @@ bool Server::Start(const Config& cfg)
         ERROR("The socket creation failed with error %d", errno);
         return false;
     }
-    MiniMech.init(cfg.GetPathCOMPort().c_str());
-
+    //MiniMech.init(cfg.GetPathCOMPort().c_str());
 
     memset(&st_sock,0,sizeof(st_sock));
     st_sock.sin_family = PF_INET;
@@ -55,24 +54,28 @@ bool Server::Start(const Config& cfg)
     sigaction(SIGCHLD, &sigchld_action, nullptr);
 
 
-    while(true)
-    {
+    while(true) {
         int client_socket;
-        client_socket = (int)TEMP_FAILURE_RETRY(accept4(fd_socket, nullptr, nullptr, SOCK_NONBLOCK));
-        if(client_socket < 0) {
+        client_socket = (int) TEMP_FAILURE_RETRY(accept4(fd_socket, nullptr, nullptr, SOCK_NONBLOCK));
+        if (client_socket < 0) {
             if (!IS_EAGAIN())
                 return false;
         }
         else
-            client.emplace_back(client_socket);
-
-        for(auto it = client.begin(); it != client.end(); ++it)
         {
-            bool isReady = it->Run();
-            if(isReady)
-                client.erase(it);
+            client.emplace_back(client_socket, cfg);
         }
 
+        for (auto it = client.begin(); it != client.end(); ++it) {
+            bool isReady = it->Run();
+            if (isReady)
+            {
+                close(it->getFileDesc());
+                client.erase(it);
+                --it;
+            }
+        }
+    }
 
 
 
@@ -128,10 +131,10 @@ bool Server::Start(const Config& cfg)
                 exit(EXIT_FAILURE);
             }
         }*/
-    }
+    //}
     return true;
 }
-
+/*
 void Server::make_response(int client_socket, const Config& cfg)
 {
     struct
@@ -173,7 +176,7 @@ void Server::make_response(int client_socket, const Config& cfg)
 
     if (http_request.method == "GET")
     {
-        std::vector <std::string> command = get_commands(http_request.uri);
+        std::vector <std::string> command;// = get_commands(http_request.uri);
         if(command[0] == "dispenser")
         {
             res_s.err_type = 400, res_s.err_name = "Bad Request";
@@ -349,4 +352,4 @@ int Server::parsing(int client_socket, httpparser::Request &http_request, const 
 
     } while (res == httpparser::HttpRequestParser::ParsingIncompleted);
     return 0;
-}
+}*/

@@ -30,16 +30,15 @@ public:
     Server() = default;
     ~Server() = default;
 
-    bool Start(const Config& cfg);
+    bool Start(Config& cfg);
 
 
 private:
     std::vector<CClient> client;
-    CDevice MiniMech;
     sockaddr_in st_sock{};
-    void make_response(int client_socket, const Config& cfg);
-    std::vector<std::string> get_commands(std::string &uri);
-    int parsing(int client_socket, httpparser::Request &http_request, const Config &cfg);
+    /*void make_response(int client_socket, const Config& cfg);
+    //std::vector<std::string> get_commands(std::string &uri);
+    int parsing(int client_socket, httpparser::Request &http_request, const Config &cfg);*/
 };
 
 #endif

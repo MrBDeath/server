@@ -2,7 +2,7 @@
 #include "config.h"
 #include "log.h"
 #include "server.h"
-
+#include <getopt.h>
 
 int main(int argc, char* argv[])
 {
@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
 			{"config", 	1, nullptr, 'c' },
 			{nullptr,	0, nullptr,  0  }
 	};
+
 	do
 	{
 		next_option = getopt_long (argc, argv, short_options,

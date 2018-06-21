@@ -8,44 +8,48 @@
 #include <vector>
 #include <sstream>
 #include <string>
-
-class IExecutor
-{
-public:
-    virtual void Run(void) = 0;
-    virtual void GetResp(void) = 0;
-};
+#include <sys/socket.h>
+#include "device.h"
+#include "httpparser/request.h"
+#include "httpparser/httprequestparser.h"
+#include "config.h"
+#include "executor.h"
 
 class CClient
 {
     enum
     {
+        ST_INIT,
         ST_PARSE,
         ST_RQ_PARSE,
         ST_EXECUTE_REQ,
-
+        ST_MAKE_RES,
+        ST_SEND_RES,
     } state;
+
     IExecutor *m_pExecutor;
-    int fdesc;
+    int dSocket;
+    Config *cfg;
+    time_t tTimeout;
+    httpparser::Request http_request;
+    std::string response;
+
+    size_t all_sz;
+
 public:
-    explicit CClient(int fd);
+    CClient(int fd, Config &conf);
     bool Run();
+    int getFileDesc();
+    ~CClient() {}
     std::vector<std::string> get_commands(std::string &uri);
-    ~CClient() = default;
 };
 
 
 class CFileReader : public IExecutor
 {
 public:
-    virtual void Run(void);
+    void Run();
 
-};
-
-class CDevice : public IExecutor
-{
-public:
-    virtual void Run(void);
 };
 
 #endif //SERVER_NEW_CLIENT_H

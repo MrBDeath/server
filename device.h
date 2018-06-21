@@ -3,6 +3,7 @@
 //
 
 #ifndef SERVER_NEW_DEVICE_H
+
 #define SERVER_NEW_DEVICE_H
 
 #define MULTIMECH_ACK       0x06
@@ -15,14 +16,21 @@
 
 #include "MMech.h"
 #include "json_parser/json.hpp"
+#include "client.h"
+#include "executor.h"
 
-class CDevice
+
+class CDevice : public IExecutor
 {
+
     CProtocol protocol;
     bool transfer(const std::vector<uint8_t> &bytes, std::vector<uint8_t> *response, time_t seconds = 120);
     std::string generateJSON(const std::vector<uint8_t> &bytes);
 public:
+
+    void Run();
     CDevice();
+    CDevice(const char *path);
     ~CDevice();
     bool init(const char *path);
     uint8_t checksum(const std::vector<uint8_t> &bytes);
@@ -38,6 +46,7 @@ public:
         STATE_RECV_ENDCOM,
         STATE_WAIT,
     };
+
     StateMachine currentState;
 
     std::string Dispense(uint8_t amount);
