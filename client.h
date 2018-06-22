@@ -5,15 +5,9 @@
 #ifndef SERVER_NEW_CLIENT_H
 #define SERVER_NEW_CLIENT_H
 
-#include <vector>
-#include <sstream>
-#include <string>
-#include <sys/socket.h>
-#include "device.h"
-#include "httpparser/request.h"
-#include "httpparser/httprequestparser.h"
-#include "config.h"
+
 #include "executor.h"
+#include "httpparser/request.h"
 
 class CClient
 {
@@ -29,7 +23,7 @@ class CClient
 
     IExecutor *m_pExecutor;
     int dSocket;
-    Config *cfg;
+    const Config &cfg;
     time_t tTimeout;
     httpparser::Request http_request;
     std::string response;
@@ -37,19 +31,11 @@ class CClient
     size_t all_sz;
 
 public:
-    CClient(int fd, Config &conf);
+    CClient(int fd, const Config &conf);
     bool Run();
     int getFileDesc();
     ~CClient() {}
-    std::vector<std::string> get_commands(std::string &uri);
 };
 
-
-class CFileReader : public IExecutor
-{
-public:
-    void Run();
-
-};
 
 #endif //SERVER_NEW_CLIENT_H

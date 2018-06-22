@@ -1,8 +1,10 @@
+
+
+#include <getopt.h>
 #include <iostream>
 #include "config.h"
 #include "log.h"
 #include "server.h"
-#include <getopt.h>
 
 int main(int argc, char* argv[])
 {

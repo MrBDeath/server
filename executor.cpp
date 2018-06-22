@@ -4,10 +4,15 @@
 
 #include "executor.h"
 
-
-void IExecutor::SetURI(const std::vector<std::string> &commands)
+IExecutor::IExecutor(const Config &conf) :
+cfg(conf)
 {
-    command = commands;
+
+}
+
+void IExecutor::SetURI(const std::string &commands)
+{
+    uri = commands;
 }
 
 std::string IExecutor::GetResp()

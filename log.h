@@ -1,11 +1,9 @@
 #ifndef LOG_H__
 #define LOG_H__
 
-#include "config.h"
-#include <sys/stat.h>
-#include "debug.h"
-#include <unistd.h>
-#include <cstdarg>
+
+#include <cstdio>
+#include <string>
 
 #define ERROR(text,...)     (Log::Instance()->insert(text, LG_ERR, ##__VA_ARGS__))
 #define WARNING(text,...)   (Log::Instance()->insert(text, LG_WRG, ##__VA_ARGS__))

@@ -2,7 +2,10 @@
 // Created by vadim on 6/7/18.
 //
 
+#include <unistd.h>
+#include <fcntl.h>
 #include "MMech.h"
+#include <termios.h>
 
 CProtocol::CProtocol() : hDevice(-1)
 {
@@ -20,9 +23,9 @@ int CProtocol::GetDescriptor()
     return hDevice;
 }
 
-void CProtocol::init(const char* path)
+void CProtocol::init(const std::string &path)
 {
-    hDevice = open(path, O_NOCTTY | O_RDWR);
+    hDevice = open(path.c_str(), O_NOCTTY | O_RDWR);
     if(hDevice < 0)
     {
         // ALARM!!!!!!

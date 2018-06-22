@@ -2,18 +2,20 @@
 // Created by vadim on 6/7/18.
 //
 
-#include "device.h"
 // -------------------------------------
 
-CDevice::CDevice() : currentState(STATE_SENDING)
-{
+#include <unistd.h>
+#include "config.h"
+#include "executor.h"
+#include "device.h"
+#include "utils.h"
+#include "json_parser/json.hpp"
 
+CDevice::CDevice(const Config &conf) : IExecutor(conf), currentState(STATE_SENDING)
+{
+    protocol.init(cfg.GetPathCOMPort().c_str());
 }
 
-CDevice::CDevice(const char* path) : currentState(STATE_SENDING)
-{
-    protocol.init(path);
-}
 
 CDevice::~CDevice()
 = default;
@@ -263,6 +265,8 @@ void CDevice::Run()
     std::string json = "Error";
     stRes.Name = "Bad Request";
     stRes.Type = 400;
+    std::vector<std::string> command = Utils::get_commands(uri);
+
     if(command.size() > 1)
     {
         if(command[1] == "status")

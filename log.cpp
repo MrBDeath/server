@@ -3,7 +3,10 @@
 //
 
 
+#include <unistd.h>
+#include <cstdarg>
 #include "log.h"
+#include "debug.h"
 
 Log* Log::_self=nullptr;
 

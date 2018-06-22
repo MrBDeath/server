@@ -1,5 +1,6 @@
 #include "config.h"
 #include <fstream>
+#include "debug.h"
 
 
 Config::Config() : address("localhost"), port("7777"), resource_dir("/"), log_path(""), error_path("/"),

@@ -1,11 +1,7 @@
 #ifndef CONFIG_H__
 #define CONFIG_H__
 
-#include <cstring>
-#include <cstdio>
-#include <iostream>
-#include <cstdlib>
-#include "debug.h"
+#include <string>
 
 class Config
 {

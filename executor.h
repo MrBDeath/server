@@ -8,23 +8,27 @@
 
 #include <string>
 #include <vector>
+#include "config.h"
 
 class IExecutor
 {
 public:
+    IExecutor(const Config &conf);
     virtual void Run() = 0;
     std::string GetResp();
-    void SetURI(const std::vector<std::string> &commands);
+    void SetURI(const std::string &commands);
     int GetResType();
     std::string GetResName();
+
 protected:
-    std::vector<std::string> command;
+    const Config &cfg;
+    std::string uri;
     std::string response;
     struct
     {
         int Type;
         std::string Name;
-    }stRes;
+    } stRes;
 };
 
 

@@ -5,9 +5,8 @@
 #ifndef SERVER_NEW_MMECH_H
 #define SERVER_NEW_MMECH_H
 
-#include <fcntl.h>
-#include <termios.h>
-#include "log.h"
+
+#include <string>
 #include <vector>
 
 class CProtocol
@@ -18,7 +17,7 @@ public:
     CProtocol();
     ~CProtocol();
 
-    void init(const char* path);
+    void init(const std::string &path);
     int GetDescriptor();
     ssize_t send(const std::vector<uint8_t> &bytes);
     bool recv(std::vector<uint8_t> &buffer, size_t size, time_t seconds = 120, suseconds_t microseconds = 0);
